@@ -1,0 +1,65 @@
+Create database Ola;
+use Ola;
+
+#1. Retrieve all successful bookings:
+#created view so that anyone can directly execute view to see all the records instead of the whole statement
+Create View successful_bookings As 
+SELECT * FROM bookings
+where Booking_Status= 'Success';
+
+#2. Find the average ride distance for each vehicle type:
+#avg_distance is the column name
+Create view ride_distance_for_each_vehicle As
+SELECT Vehicle_Type, AVG(Ride_Distance)
+as avg_distance from bookings 
+group by Vehicle_Type;
+
+#3. Get the total number of cancelled rides by customers:
+create view Canced_by_cust as
+Select count(Canceled_Rides_by_Customer)
+as Canceled_Rides from bookings;
+
+#4. List the top 5 customers who booked the highest number of rides:
+create view top_five as
+Select Customer_ID, count(Booking_ID) as total_rides
+from bookings
+group by Customer_ID
+order by total_rides
+desc limit 5;
+
+#5. Get the number of rides cancelled by drivers due to personal and car-related issues:
+create view caned_by_driver as
+Select count(*)
+from bookings
+where Canceled_Rides_by_Driver='Personal & Car related issue';
+
+#6. Find the maximum and minimum driver ratings for Prime Sedan bookings:
+create view max_min_rate as
+Select MAX(Driver_Ratings) as max_rate,
+MIN(Driver_Ratings) as min_rate
+from bookings
+where vehicle_type='Prime Sedan';
+
+#7. Retrieve all rides where payment was made using UPI:
+create view payment_UPI as
+select * from bookings
+where payment_method='UPI';
+
+#8. Find the average customer rating per vehicle type:
+create view cust_rate_vehicle as
+select vehicle_type, avg(customer_rating) as cust_rate
+from bookings
+group by vehicle_type;
+
+#9. Calculate the total booking value of rides completed successfully:
+create view total_succ_booked as
+select sum(booking_value) as success_booked
+from bookings
+where booking_status='success';
+
+#10. List all incomplete rides along with the reason:
+create view incomp_rides as
+select booking_id,incomplete_rides_reason 
+from bookings
+where incomplete_rides='yes';
+
